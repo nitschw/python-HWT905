@@ -47,44 +47,40 @@ class HWT905():
             if data.hex() == '50':  # Time output
                 print('Got time data')
                 data = self.ser.read(9)
-                data_int = self.unhexify(data.hex())
-                self.time_year = 2000 + data_int[0]
-                self.time_month = data_int[1]
-                self.time_day = data_int[2]
-                self.time_hour = data_int[3]
-                self.time_minute = data_int[4]
-                self.time_milli = ((data_int[6] << 8) | data_int[5])
+                self.time_year = 2000 + data[0]
+                self.time_month = data[1]
+                self.time_day = data[2]
+                self.time_hour = data[3]
+                self.time_minute = data[4]
+                self.time_milli = ((data[6] << 8) | data[5])
             elif data.hex() == '51':  # Acceleration output
                 print('Got acceleration data')
                 data = self.ser.read(9)
-                data_int = self.unhexify(data.hex())
-                self.ax = ((data_int[1] << 8) | data_int[0])/32768*16*9.81
-                self.ay = ((data_int[3] << 8) | data_int[2])/32768*16*9.81
-                self.az = ((data_int[5] << 8) | data_int[4])/32768*16*9.81
-                self.acc_temperature = ((data_int[7] << 8) + data_int[6])/100
+                self.ax = int.from_bytes(((data[1] << 8) | data[0]).to_bytes(2, byteorder='big'), byteorder='big', signed=True)/32768*16*9.81
+                self.ay = int.from_bytes(((data[3] << 8) | data[2]).to_bytes(2, byteorder='big'), byteorder='big', signed=True)/32768*16*9.81
+                self.az = int.from_bytes(((data[5] << 8) | data[4]).to_bytes(2, byteorder='big'), byteorder='big', signed=True)/32768*16*9.81
+                self.acc_temperature = ((data[7] << 8) + data[6])/100
             elif data.hex() == '52':  # Angular velocity output
                 print('Got angular velocity data')
                 data = self.ser.read(9)
-                data_int = self.unhexify(data.hex())
-                self.wx = ((data_int[1] << 8) | data_int[0])/32768*2000
-                self.wy = ((data_int[3] << 8) | data_int[2])/32768*2000
-                self.wz = ((data_int[5] << 8) | data_int[4])/32768*2000
-                self.w_temperature = ((data_int[7] << 8) | data_int[6])/100
+                self.wx = int.from_bytes(((data[1] << 8) | data[0]).to_bytes(2, byteorder='big'), byteorder='big', signed=True)/32768*2000
+                self.wy = int.from_bytes(((data[3] << 8) | data[2]).to_bytes(2, byteorder='big'), byteorder='big', signed=True)/32768*2000
+                self.wz = int.from_bytes(((data[5] << 8) | data[4]).to_bytes(2, byteorder='big'), byteorder='big', signed=True)/32768*2000
+                self.w_temperature = ((data[7] << 8) | data[6])/100
             elif data.hex() == '53':  # Angle output
                 print('Got angular data output')
                 data = self.ser.read(9)
                 data_int = self.unhexify(data.hex())
-                self.roll = ((data_int[1] << 8) | data_int[0])/32768*180
-                self.pitch = ((data_int[3] << 8) | data_int[2])/32768*180
-                self.yaw = ((data_int[5] << 8) | data_int[6])/32768*180
-                self.rpy_temperature = ((data_int[7] << 8) | data_int[8])/100
+                self.roll = int.from_bytes(((data[1] << 8) | data[0]).to_bytes(2, byteorder='big'), byteorder='big', signed=True)/32768*180
+                self.pitch = int.from_bytes(((data[3] << 8) | data[2]).to_bytes(2, byteorder='big'), byteorder='big', signed=True)/32768*180
+                self.yaw = int.from_bytes(((data[6] << 8) | data[5]).to_bytes(2, byteorder='big'), byteorder='big', signed=True)/32768*180
+                self.rpy_temperature = ((data[7] << 8) | data[8])/100
             elif data.hex() == '54':  # Magnetometer output
                 print('Got magnetometer data output')
                 data = self.ser.read(9)
-                data_int = self.unhexify(data.hex())
-                self.hx = (data_int[1] << 8) | data_int[0]
-                self.hy = (data_int[3] << 8) | data_int[2]
-                self.hz = (data_int[5] << 8) | data_int[4]
+                self.hx = int.from_bytes(((data[1] << 8) | data[0]).to_bytes(2, byteorder='big'), byteorder='big', signed=True)/32768
+                self.hy = int.from_bytes(((data[3] << 8) | data[2]).to_bytes(2, byteorder='big'), byteorder='big', signed=True)/32768
+                self.hz = int.from_bytes(((data[5] << 8) | data[4]).to_bytes(2, byteorder='big'), byteorder='big', signed=True)/32768
         print('time_year: ', self.time_year)
         print('ax: ', self.ax)
         print('ay: ', self.ay)
